@@ -12,3 +12,16 @@ jobs:
     runs-on: arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!! second JOB"
+  Build-rust:
+    runs-on: arc-runner-set
+    steps:
+
+    - name: install rust 
+      run: |
+        apt install curl build-essential libssl-dev -y
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    - name: build rust
+      run: |
+        cd rust-project
+        cargo build
+        cargo run
