@@ -4,7 +4,6 @@ on:
 
 jobs:
   Explore-GitHub-Actions:
-    # You need to use the INSTALLATION_NAME from the previous step
     runs-on: arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
@@ -82,18 +81,7 @@ jobs:
     
     - name: Install Angular CLI
       run: sudo npm install -g @angular/cli -y
-
-  Checking-logs:
+  Running-job-to-show-different-pods:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: checking pods
-      run: |
-        kubectl get pods -n arc-runners
-        
-    - name: checking helm list
-      run: |
-        helm ls -n arc-runners
+    - run: echo "🎉 This job uses runner scale set runners!"
