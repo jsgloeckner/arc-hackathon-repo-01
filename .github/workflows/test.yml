@@ -8,3 +8,7 @@ jobs:
     runs-on: arc-runner-set
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
+  Explore-GitHub-Actions-Second-Job:
+    runs-on: arc-runner-set
+    steps:
+    - run: echo "🎉 This job uses runner scale set runners!! second JOB"
