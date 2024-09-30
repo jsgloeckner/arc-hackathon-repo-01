@@ -103,7 +103,7 @@ jobs:
         sudo apt-mark hold kubelet kubeadm kubectl
   Helm-install:
     runs-on: arc-runner-set    
-    needs: Explore-GitHub-Actions-Second-Job
+    needs: Kube-install
     steps:
     - name: Set up Helm
       run: |
@@ -114,7 +114,7 @@ jobs:
         sudo apt-get install helm
   Checking-cluster:
     runs-on: arc-runner-set
-    needs: [Kube-install,Helm-install ]
+    needs: [Helm-install ]
     steps:
     - name: logs
       run: |
