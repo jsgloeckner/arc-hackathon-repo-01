@@ -49,11 +49,13 @@ jobs:
     - name: Build project
       run: |
         ls
-        cd rust-project  
-        cargo build --release
+        cd rust-project
+        cargo update 
+        cargo build
 
     - name: Run tests
       run: |
+      ls
         cd rust-project  
         cargo test
   
