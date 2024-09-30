@@ -114,7 +114,7 @@ jobs:
         sudo apt-get install helm
   Checking-cluster:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
+    needs: [Kube-install,Helm-install ]
     steps:
     - name: logs
       run: |
