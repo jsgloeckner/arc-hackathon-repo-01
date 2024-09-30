@@ -1,5 +1,5 @@
 
-name: Actions Runner Controller Demo
+name: Sleep Task
 on:
   workflow_dispatch:
 
