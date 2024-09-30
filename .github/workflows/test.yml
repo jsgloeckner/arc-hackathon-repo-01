@@ -50,6 +50,8 @@ jobs:
       run: |
         ls
         cd rust-project
+        sudo apt update
+        sudo apt install build-essential
         cargo update 
         cargo build
 
@@ -59,3 +61,31 @@ jobs:
         cd rust-project  
         cargo test
   
+  Build-UI:
+    runs-on: arc-runner-set
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Install Node.js
+      run: |
+        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+
+    - name: Verify Node.js installation
+      run: |
+        node -v
+        npm -v
+    
+    - name: Install Angular CLI
+      run: sudo npm install -g @angular/cli
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run unit tests
+      run: npm test
+
+    - name: Build application
+      run: npm run build
