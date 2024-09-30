@@ -15,6 +15,10 @@ jobs:
   Build-rust:
     runs-on: arc-runner-set
     steps:
+    - name: Install curl
+      run: |
+        sudo apt-get update 
+        sudo apt-get install -y curl
     - name: Set up Rust
       uses: actions-rs/toolchain@v1
       with:
