@@ -83,5 +83,39 @@ jobs:
       run: sudo npm install -g @angular/cli -y
   Running-job-to-show-different-pods:
     runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
     steps:
     - run: echo "🎉 This job uses runner scale set runners!"
+  Kube-install:
+    runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
+    steps:
+    - name: Set up Kubernetes
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl
+        sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+        sudo bash -c 'cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
+        deb https://apt.kubernetes.io/ kubernetes-xenial main
+        EOF'
+        sudo apt-get update
+        sudo apt-get install -y kubelet kubeadm kubectl
+        sudo apt-mark hold kubelet kubeadm kubectl
+  Helm-install:
+    runs-on: arc-runner-set    
+    needs: Explore-GitHub-Actions-Second-Job
+    steps:
+    - name: Set up Helm
+      run: |
+        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
+        sudo apt-get install apt-transport-https --yes
+        echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+        sudo apt-get update
+        sudo apt-get install helm
+  Checking-cluster:
+    runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
+    steps:
+    - name: logs
+      run: |
+        kubectl get ns
