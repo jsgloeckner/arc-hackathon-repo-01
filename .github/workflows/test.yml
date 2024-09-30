@@ -71,6 +71,7 @@ jobs:
     - name: Install Node.js
       run: |
         curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+        sudo apt update
         sudo apt-get install -y nodejs npm
 
     - name: Verify Node.js installation
@@ -79,7 +80,7 @@ jobs:
         npm -v
     
     - name: Install Angular CLI
-      run: sudo npm install -g @angular/cli
+      run: sudo npm install -g @angular/cli -y
 
     - name: Install dependencies
       run: npm install
