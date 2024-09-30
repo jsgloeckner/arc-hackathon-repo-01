@@ -51,7 +51,7 @@ jobs:
         ls
         cd rust-project
         sudo apt update
-        sudo apt install build-essential
+        sudo apt install -y build-essential
         cargo update 
         cargo build
 
@@ -71,7 +71,7 @@ jobs:
     - name: Install Node.js
       run: |
         curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-        sudo apt-get install -y nodejs
+        sudo apt-get install -y nodejs npm
 
     - name: Verify Node.js installation
       run: |
