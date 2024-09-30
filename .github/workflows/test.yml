@@ -10,7 +10,6 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners!"
   Explore-GitHub-Actions-Second-Job:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions
     steps:
     - run: echo "🎉 Just Showing the ARC capabilities"
   Build-rust:
@@ -62,9 +61,9 @@ jobs:
         ls
         cd rust-project  
         cargo test
-  
   Angular-Install:
     runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
 
     steps:
     - name: Checkout code
@@ -84,5 +83,17 @@ jobs:
     - name: Install Angular CLI
       run: sudo npm install -g @angular/cli -y
 
-    - name: Install dependencies
-      run: npm install
+  Checking-logs:
+    runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: checking pods
+      run: |
+        kubectl get pods -n arc-runners
+        
+    - name: checking helm list
+      run: |
+        helm ls -n arc-runners
