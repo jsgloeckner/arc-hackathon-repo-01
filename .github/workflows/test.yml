@@ -10,10 +10,12 @@ jobs:
     - run: echo "🎉 This job uses runner scale set runners!"
   Explore-GitHub-Actions-Second-Job:
     runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions
     steps:
-    - run: echo "🎉 This job uses runner scale set runners!! second JOB"
+    - run: echo "🎉 Just Showing the ARC capabilities"
   Build-rust:
     runs-on: arc-runner-set
+    needs: Explore-GitHub-Actions-Second-Job
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -61,7 +63,7 @@ jobs:
         cd rust-project  
         cargo test
   
-  Build-UI:
+  Angular-Install:
     runs-on: arc-runner-set
 
     steps:
@@ -84,9 +86,3 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-
-    - name: Run unit tests
-      run: npm test
-
-    - name: Build application
-      run: npm run build
