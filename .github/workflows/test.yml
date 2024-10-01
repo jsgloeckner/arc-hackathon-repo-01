@@ -86,52 +86,9 @@ jobs:
     needs: Explore-GitHub-Actions-Second-Job
     steps:
       - run: echo "🎉 This job uses runner scale set runners!"
-  Kube-install:
-    runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Update package lists
-        run: |
-          sudo apt update
-
-      - name: Install required packages
-        run: |
-          sudo apt install apt-transport-https curl -y
-
-      - name: Add Kubernetes GPG key
-        run: |
-          curl -fsSLo | sudo apt-key add -
-
-      - name: Add Kubernetes repository
-        run: |
-          echo "deb [arch=amd64] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-      - name: Update package lists
-        run: |
-          sudo apt update
-
-      - name: Install Kubernetes components
-        run: |
-          sudo apt install kubeadm kubectl kubelet -y
-
-      - name: Initialize Kubernetes cluster
-        run: |
-          sudo kubeadm init --pod-network-cidr=10.244.0.0/16
-
-      - name: Configure kubectl
-        run: |
-          echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
-          source ~/.bashrc
-
-      - name: Verify cluster installation
-        run: |
-          kubectl get nodes
   Helm-install:
     runs-on: arc-runner-set
-    needs: Kube-install
+    needs: Angular-Install
     steps:
       - name: Set up Helm
         run: |
