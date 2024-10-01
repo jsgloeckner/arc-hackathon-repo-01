@@ -6,116 +6,144 @@ jobs:
   Explore-GitHub-Actions:
     runs-on: arc-runner-set
     steps:
-    - run: echo "🎉 This job uses runner scale set runners!"
+      - run: echo "🎉 This job uses runner scale set runners!"
   Explore-GitHub-Actions-Second-Job:
     runs-on: arc-runner-set
     steps:
-    - run: echo "🎉 Just Showing the ARC capabilities"
+      - run: echo "🎉 Just Showing the ARC capabilities"
   Build-rust:
     runs-on: arc-runner-set
     needs: Explore-GitHub-Actions-Second-Job
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Install curl
-      run: |
-        sudo apt-get update 
-        sudo apt-get install -y curl
-    - name: Set up Rust
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        override: true
-  
-    - name: Verify Rust installation
-      run: rustc --version
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Install curl
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y curl
+      - name: Set up Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
 
-    - name: Cache Cargo registry
-      uses: actions/cache@v2
-      with:
-        path: ~/.cargo/registry
-        key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-registry-
+      - name: Verify Rust installation
+        run: rustc --version
 
-    - name: Cache Cargo index
-      uses: actions/cache@v2
-      with:
-        path: ~/.cargo/index
-        key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-index-
+      - name: Cache Cargo registry
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo/registry
+          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-registry-
 
-    - name: Build project
-      run: |
-        ls
-        cd rust-project
-        sudo apt update
-        sudo apt install -y build-essential
-        cargo update 
-        cargo build
+      - name: Cache Cargo index
+        uses: actions/cache@v2
+        with:
+          path: ~/.cargo/index
+          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-index-
 
-    - name: Run tests
-      run: |
-        ls
-        cd rust-project  
-        cargo test
+      - name: Build project
+        run: |
+          ls
+          cd rust-project
+          sudo apt update
+          sudo apt install -y build-essential
+          cargo update 
+          cargo build
+
+      - name: Run tests
+        run: |
+          ls
+          cd rust-project  
+          cargo test
   Angular-Install:
     runs-on: arc-runner-set
     needs: Explore-GitHub-Actions-Second-Job
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    
-    - name: Install Node.js
-      run: |
-        curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
-        sudo apt update
-        sudo apt-get install -y nodejs npm
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Verify Node.js installation
-      run: |
-        node -v
-        npm -v
-    
-    - name: Install Angular CLI
-      run: sudo npm install -g @angular/cli -y
+      - name: Install Node.js
+        run: |
+          curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
+          sudo apt update
+          sudo apt-get install -y nodejs npm
+
+      - name: Verify Node.js installation
+        run: |
+          node -v
+          npm -v
+
+      - name: Install Angular CLI
+        run: sudo npm install -g @angular/cli -y
   Running-job-to-show-different-pods:
     runs-on: arc-runner-set
     needs: Explore-GitHub-Actions-Second-Job
     steps:
-    - run: echo "🎉 This job uses runner scale set runners!"
+      - run: echo "🎉 This job uses runner scale set runners!"
   Kube-install:
     runs-on: arc-runner-set
     needs: Explore-GitHub-Actions-Second-Job
     steps:
-    - name: Set up Kubernetes
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y apt-transport-https ca-certificates curl
-        sudo curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-        sudo bash -c 'cat <<EOF >/etc/apt/sources.list.d/kubernetes.list
-        deb https://apt.kubernetes.io/ kubernetes-xenial main
-        EOF'
-        sudo apt-get update
-        sudo apt-get install -y kubelet kubeadm kubectl
-        sudo apt-mark hold kubelet kubeadm kubectl
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Update package lists
+        run: |
+          sudo apt update
+
+      - name: Install required packages
+        run: |
+          sudo apt install apt-transport-https curl -y
+
+      - name: Add Kubernetes GPG key
+        run: |
+          curl -fsSLo | sudo apt-key add -
+
+      - name: Add Kubernetes repository
+        run: |
+          echo "deb [arch=amd64] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+      - name: Update package lists
+        run: |
+          sudo apt update
+
+      - name: Install Kubernetes components
+        run: |
+          sudo apt install kubeadm kubectl kubelet -y
+
+      - name: Initialize Kubernetes cluster
+        run: |
+          sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+      - name: Configure kubectl
+        run: |
+          echo "export KUBECONFIG=/etc/kubernetes/admin.conf" >> ~/.bashrc
+          source ~/.bashrc
+
+      - name: Verify cluster installation
+        run: |
+          kubectl get nodes
   Helm-install:
-    runs-on: arc-runner-set    
+    runs-on: arc-runner-set
     needs: Kube-install
     steps:
-    - name: Set up Helm
-      run: |
-        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
-        sudo apt-get install apt-transport-https --yes
-        echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-        sudo apt-get update
-        sudo apt-get install helm
+      - name: Set up Helm
+        run: |
+          curl https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
+          sudo apt-get install apt-transport-https --yes
+          echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+          sudo apt-get update
+          sudo apt-get install helm
   Checking-cluster:
     runs-on: arc-runner-set
-    needs: [Helm-install ]
+    needs: [Helm-install]
     steps:
-    - name: logs
-      run: |
-        kubectl get ns
+      - name: logs
+        run: |
+          kubectl get ns
