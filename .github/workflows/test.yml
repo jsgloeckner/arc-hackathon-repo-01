@@ -3,17 +3,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  Explore-GitHub-Actions:
+  Hello-Scott:
     runs-on: arc-runner-set
     steps:
-      - run: echo "🎉 This job uses runner scale set runners!"
-  Explore-GitHub-Actions-Second-Job:
+      - run: echo "🎉 Hey Scott!! from the pod-1!"
+  Hello-Joe:
     runs-on: arc-runner-set
     steps:
-      - run: echo "🎉 Just Showing the ARC capabilities"
+      - run: echo "🎉 Hey Joe!! from pod-2"
   Build-rust:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -43,7 +42,7 @@ jobs:
           cargo test
   Angular-Install:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
+    needs: Build-rust
 
     steps:
       - name: Checkout code
@@ -61,15 +60,27 @@ jobs:
           npm -v
       - name: Install Angular CLI
         run: sudo npm install -g @angular/cli -y
-  Running-job-to-show-different-pods:
+  Hello-Doug:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
+    needs: Hello-Joe
     steps:
       - run: |
-          echo "🎉 This job uses runner scale set runners!"
-  Running-job-to-show-different-pods-again:
+          echo "🎉  Hey Doug!! from the pod-5!"
+  Hello-Clark:
     runs-on: arc-runner-set
-    needs: Explore-GitHub-Actions-Second-Job
+    needs: Hello-Joe
     steps:
       - run: |
-          echo "🎉 This job uses runner scale set runners!"
+          echo "🎉  Hey Clark!! from the pod-5!"
+  Hello-KG:
+    runs-on: arc-runner-set
+    needs: Hello-Joe
+    steps:
+      - run: |
+          echo "🎉  Hey KG!! from the pod-5!"
+  Hello-Dave:
+    runs-on: arc-runner-set
+    needs: Hello-Scott
+    steps:
+      - run: |
+          echo "🎉  Hey Dave!! from the pod-5!"
