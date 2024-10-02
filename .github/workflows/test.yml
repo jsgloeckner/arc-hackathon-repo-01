@@ -11,7 +11,7 @@ jobs:
     runs-on: arc-runner-set
     steps:
       - run: echo "🎉 Hey Joe!! from pod-2"
-  Build-rust:
+  Rust-Install:
     runs-on: arc-runner-set
     steps:
       - name: Checkout repository
@@ -42,8 +42,6 @@ jobs:
           cargo test
   Angular-Install:
     runs-on: arc-runner-set
-    needs: Build-rust
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
