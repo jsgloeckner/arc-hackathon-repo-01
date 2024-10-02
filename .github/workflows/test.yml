@@ -23,10 +23,11 @@ jobs:
           sudo apt-get install -y build-essential
 
       - name: Set up Rust
-        uses: actions-rs/toolchain@v2
+        uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+          components: rustfmt, clippy
 
       - name: Build project
         run: |
