@@ -78,7 +78,13 @@ jobs:
           echo "🎉  Hey KG!! from the pod-5!"
   Hello-Dave:
     runs-on: arc-runner-set
+    needs: Hello-Joe
+    steps:
+      - run: |
+          echo "🎉  Hey Dave!! from the new pod!"
+  Hello-DPT:
+    runs-on: arc-runner-set
     needs: Hello-Scott
     steps:
       - run: |
-          echo "🎉  Hey Dave!! from the pod-5!"
+          echo "🎉  Hey Team!! from the another new pod!"
