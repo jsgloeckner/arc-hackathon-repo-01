@@ -21,6 +21,7 @@ githubConfigSecret:
 ##   For a pre-defined secret using GitHub App, the secret needs to be created like this:
 ##   > kubectl create secret generic pre-defined-secret --namespace=my_namespace --from-literal=github_app_id=123456 --from-literal=github_app_installation_id=654321 --from-literal=github_app_private_key='-----BEGIN CERTIFICATE-----*******'
 # githubConfigSecret: pre-defined-secret
+
 ## proxy can be used to define proxy settings that will be used by the
 ## controller, the listener and the runner of this scale set.
 #
@@ -120,7 +121,7 @@ template:
   ##           mountPath: /home/runner/tmpDir
   ##     containers:
   ##     - name: runner
-  ##       image: ghcr.io/rockwell-automation-inc/arc-image:latest
+  ##       image: ghcr.io/actions/actions-runner:latest
   ##       command: ["/home/runner/run.sh"]
   ##       env:
   ##         - name: DOCKER_HOST
@@ -188,10 +189,8 @@ template:
   spec:
     containers:
       - name: runner
-        image: ghcr.io/rockwell-automation-inc/arc-image:latest
+        image: ghcr.io/actions/actions-runner:latest
         command: ["/home/runner/run.sh"]
-    imagePullSecrets:
-    - name: regcred
 
 ## Optional controller service account that needs to have required Role and RoleBinding
 ## to operate this gha-runner-scale-set installation.
