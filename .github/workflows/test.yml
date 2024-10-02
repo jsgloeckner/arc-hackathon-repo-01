@@ -49,12 +49,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install curl
-        run: |
-          sudo apt-get update 
-          sudo apt-get install -y curl
-          sudo apt-get install -y build-essential
-
       - name: Install Node.js
         run: |
           curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
