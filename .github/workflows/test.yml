@@ -74,7 +74,7 @@ jobs:
           echo "🎉  Hey Clark!! from the pod-5!"
   Hello-KG:
     runs-on: arc-runner-set
-    needs: Hello-Joe
+    needs: Hello-Doug
     steps:
       - run: |
           echo "🎉  Hey KG!! from the pod-5!"
