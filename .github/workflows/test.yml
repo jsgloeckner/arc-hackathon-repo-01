@@ -17,41 +17,17 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-      - name: Install curl
-        run: |
-          sudo apt-get update 
-          sudo apt-get install -y curl
+
       - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
 
-      - name: Verify Rust installation
-        run: rustc --version
-
-      - name: Cache Cargo registry
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo/registry
-          key: ${{ runner.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-registry-
-
-      - name: Cache Cargo index
-        uses: actions/cache@v2
-        with:
-          path: ~/.cargo/index
-          key: ${{ runner.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-cargo-index-
-
       - name: Build project
         run: |
           ls
           cd rust-project
-          sudo apt update
-          sudo apt install -y build-essential
           cargo update 
           cargo build
 
@@ -68,6 +44,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install curl
+        run: |
+          sudo apt-get update 
+          sudo apt-get install -y curl
+          sudo apt-get install -y build-essential
+
       - name: Install Node.js
         run: |
           curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -
@@ -78,29 +60,19 @@ jobs:
         run: |
           node -v
           npm -v
-
       - name: Install Angular CLI
         run: sudo npm install -g @angular/cli -y
   Running-job-to-show-different-pods:
     runs-on: arc-runner-set
     needs: Explore-GitHub-Actions-Second-Job
     steps:
-      - run: echo "🎉 This job uses runner scale set runners!"
-  Helm-install:
+      - run: |
+          echo "🎉 This job uses runner scale set runners!"
+          sleep
+  Running-job-to-show-different-pods-again:
     runs-on: arc-runner-set
-    needs: Angular-Install
+    needs: Explore-GitHub-Actions-Second-Job
     steps:
-      - name: Set up Helm
-        run: |
-          curl https://baltocdn.com/helm/signing.asc | gpg --dearmor -o /usr/share/keyrings/helm.gpg
-          sudo apt-get install apt-transport-https --yes
-          echo "deb [signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
-          sudo apt-get update
-          sudo apt-get install helm
-  Checking-cluster:
-    runs-on: arc-runner-set
-    needs: [Helm-install]
-    steps:
-      - name: logs
-        run: |
-          kubectl get ns
+      - run: |
+          echo "🎉 This job uses runner scale set runners!"
+          sleep 30
